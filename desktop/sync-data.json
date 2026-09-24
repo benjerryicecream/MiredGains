@@ -1,0 +1,357 @@
+{
+  "exercises": [
+    {
+      "id": "ex-1",
+      "name": "Pull-ups",
+      "muscleGroup": "Back"
+    },
+    {
+      "id": "ex-2",
+      "name": "Push-ups",
+      "muscleGroup": "Chest"
+    },
+    {
+      "id": "ex-3",
+      "name": "Dips",
+      "muscleGroup": "Triceps"
+    },
+    {
+      "id": "ex-4",
+      "name": "Squats",
+      "muscleGroup": "Legs"
+    },
+    {
+      "id": "ex-5",
+      "name": "Bench Press",
+      "muscleGroup": "Chest"
+    },
+    {
+      "id": "ex-6",
+      "name": "Deadlift",
+      "muscleGroup": "Back"
+    },
+    {
+      "id": "ex-7",
+      "name": "Overhead Press",
+      "muscleGroup": "Shoulders"
+    },
+    {
+      "id": "ex-8",
+      "name": "Barbell Row",
+      "muscleGroup": "Back"
+    },
+    {
+      "id": "ex-9",
+      "name": "Bicep Curl",
+      "muscleGroup": "Biceps"
+    },
+    {
+      "id": "ex-10",
+      "name": "Tricep Extension",
+      "muscleGroup": "Triceps"
+    },
+    {
+      "id": "ex-11",
+      "name": "Lunges",
+      "muscleGroup": "Legs"
+    },
+    {
+      "id": "ex-12",
+      "name": "Leg Press",
+      "muscleGroup": "Legs"
+    },
+    {
+      "id": "ex-13",
+      "name": "Lat Pulldown",
+      "muscleGroup": "Back"
+    },
+    {
+      "id": "ex-14",
+      "name": "Cable Row",
+      "muscleGroup": "Back"
+    },
+    {
+      "id": "ex-15",
+      "name": "Face Pull",
+      "muscleGroup": "Shoulders"
+    },
+    {
+      "id": "ex-16",
+      "name": "Romanian Deadlift",
+      "muscleGroup": "Legs"
+    },
+    {
+      "id": "ex-17",
+      "name": "Plank",
+      "muscleGroup": "Core"
+    },
+    {
+      "id": "ex-18",
+      "name": "Ab Rollout",
+      "muscleGroup": "Core"
+    },
+    {
+      "id": "9de07dcd-6304-4010-9f93-e4cd8d2c533c",
+      "name": "Overhand Close-grip Pull-ups",
+      "muscleGroup": "Back",
+      "isCustom": true
+    },
+    {
+      "id": "cc090c14-f15a-4071-be08-bbabbf0acf4d",
+      "name": "EZ Bar Curls",
+      "muscleGroup": "Biceps",
+      "isCustom": true,
+      "updatedAt": "2026-09-10T01:39:15.844Z"
+    }
+  ],
+  "workouts": [
+    {
+      "id": "9e8c128e-1c16-4b2b-9c26-56a8b1e501d3",
+      "date": "2026-09-06T06:00:37.918Z",
+      "durationMs": 267411,
+      "exercises": [
+        {
+          "exerciseId": "9de07dcd-6304-4010-9f93-e4cd8d2c533c",
+          "exerciseName": "Overhand Close-grip Pull-ups",
+          "sets": [
+            {
+              "id": "a6bac0d5-9d57-4cf2-8f1f-792b35877d63",
+              "weight": 0,
+              "reps": 5,
+              "completed": true
+            }
+          ]
+        },
+        {
+          "exerciseId": "ex-4",
+          "exerciseName": "Squats",
+          "sets": [
+            {
+              "id": "57e9b42a-775f-49c9-963c-e83718ca1ff8",
+              "weight": 65,
+              "reps": 12,
+              "completed": true
+            },
+            {
+              "id": "f89855b5-8935-4920-9fbd-b3124ac65fdc",
+              "weight": 135,
+              "reps": 5,
+              "completed": true
+            },
+            {
+              "id": "6f411f65-7871-4deb-8bdf-2c3311fee5e6",
+              "weight": 165,
+              "reps": 5,
+              "completed": true
+            },
+            {
+              "id": "492e08aa-c4ab-4c15-9697-a129ee6ff2a8",
+              "weight": 165,
+              "reps": 5,
+              "completed": true
+            },
+            {
+              "id": "3fcef966-eddc-4370-a45a-8ad0e28a3946",
+              "weight": 165,
+              "reps": 5,
+              "completed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2903e6b-dc5b-4dc4-8587-f9ae4571ddb7",
+      "date": "2026-09-03T21:16:45.585Z",
+      "durationMs": 71892,
+      "exercises": [
+        {
+          "exerciseId": "ex-4",
+          "exerciseName": "Squats",
+          "sets": [
+            {
+              "id": "8069f489-e764-4948-b922-1a1bf750cc47",
+              "weight": 65,
+              "reps": 12,
+              "completed": true
+            },
+            {
+              "id": "16e35003-0bf4-46c0-98d1-dbeb46a37a81",
+              "weight": 135,
+              "reps": 5,
+              "completed": true
+            },
+            {
+              "id": "5527f59e-d7f5-4935-b9be-ed8a71f5dbec",
+              "weight": 165,
+              "reps": 5,
+              "completed": true
+            }
+          ]
+        }
+      ],
+      "notes": "135 felt solid. 165 needs more work to feel stable"
+    },
+    {
+      "id": "47dc5241-2de7-43e9-8e22-49fe7297bbf6",
+      "date": "2026-09-10T01:42:35.615Z",
+      "durationMs": 623304,
+      "exercises": [
+        {
+          "exerciseId": "ex-4",
+          "exerciseName": "Squats",
+          "sets": [
+            {
+              "id": "a0f3c5f9-238c-410e-8dcc-99f60c4a032b",
+              "weight": 65,
+              "reps": 12,
+              "completed": true
+            },
+            {
+              "id": "11c81f00-cbc4-4d5b-8f9b-4078727a5330",
+              "weight": 135,
+              "reps": 5,
+              "completed": true
+            },
+            {
+              "id": "7d53239b-7191-4c10-a935-5fccfbd7191a",
+              "weight": 165,
+              "reps": 5,
+              "completed": true
+            },
+            {
+              "id": "ffc0291d-47d5-4251-a63d-5232c8446603",
+              "weight": 185,
+              "reps": 2,
+              "completed": true
+            },
+            {
+              "id": "26f736ab-a2c6-44e4-9bb8-983229a5ba74",
+              "weight": 185,
+              "reps": 2,
+              "completed": true
+            }
+          ]
+        },
+        {
+          "exerciseId": "9de07dcd-6304-4010-9f93-e4cd8d2c533c",
+          "exerciseName": "Overhand Close-grip Pull-ups",
+          "sets": [
+            {
+              "id": "549d8d7c-4a53-44a1-b015-eb29abe1b357",
+              "weight": 0,
+              "reps": 5,
+              "completed": true
+            },
+            {
+              "id": "f3f986bd-5e0b-46f9-b63d-3b226ac85ed6",
+              "weight": 0,
+              "reps": 5,
+              "completed": true
+            }
+          ]
+        },
+        {
+          "exerciseId": "cc090c14-f15a-4071-be08-bbabbf0acf4d",
+          "exerciseName": "EZ Bar Curls",
+          "sets": [
+            {
+              "id": "b514b581-7040-4fb2-a4ed-ff0ac85454b2",
+              "weight": 65,
+              "reps": 8,
+              "completed": true
+            }
+          ]
+        }
+      ],
+      "notes": "185x2 for 2 sets felt solid. Will try for 3 sets of 3@185 next time.",
+      "updatedAt": "2026-09-10T05:49:06.246Z"
+    }
+  ],
+  "bodyweights": [
+    {
+      "id": "10991aad-fe9c-416c-adad-6587fe4d5e76",
+      "date": "2026-09-03",
+      "weight": 165
+    },
+    {
+      "id": "6239dc58-30bd-41cd-87ef-488f8bbb3880",
+      "date": "2026-09-08",
+      "weight": 165.4,
+      "updatedAt": "2026-09-08T23:46:10.780Z"
+    },
+    {
+      "id": "87cf798d-3c9d-4d45-a835-01adb4589404",
+      "date": "2026-09-09",
+      "weight": 167.6,
+      "updatedAt": "2026-09-10T01:43:45.518Z"
+    }
+  ],
+  "scheduledWorkouts": [
+    {
+      "id": "f7c2d280-ef6c-48af-8f6c-a6b634078dcd",
+      "title": "Leg Day",
+      "date": "2026-09-08",
+      "time": "19:00",
+      "scheduledAt": "2026-09-09T05:00:00.000Z",
+      "plannedExercises": [
+        {
+          "exerciseId": "ex-4",
+          "exerciseName": "Squats",
+          "targetSets": [
+            {
+              "id": "fc5a4d06-7350-4a4e-a086-45fa5d1f6157",
+              "targetWeight": 65,
+              "targetReps": 12
+            },
+            {
+              "id": "f7b51192-2eef-4925-9503-02adaf83c995",
+              "targetWeight": 135,
+              "targetReps": 5
+            },
+            {
+              "id": "9a4fad84-a4c0-43e3-bf40-bb9de92bf296",
+              "targetWeight": 165,
+              "targetReps": 5
+            },
+            {
+              "id": "81b1f946-26de-4d9d-b56e-75d5a83f1dbd",
+              "targetWeight": 185,
+              "targetReps": 2
+            },
+            {
+              "id": "9b2e7579-ab99-4685-b762-fcae0d45e049",
+              "targetWeight": 185,
+              "targetReps": 2
+            }
+          ]
+        },
+        {
+          "exerciseId": "9de07dcd-6304-4010-9f93-e4cd8d2c533c",
+          "exerciseName": "Overhand Close-grip Pull-ups",
+          "targetSets": [
+            {
+              "id": "e9ed2bf8-6f64-4584-aef3-1e9966620dc7",
+              "targetWeight": 0,
+              "targetReps": 5
+            },
+            {
+              "id": "9ac3b560-be78-43ec-8b43-6fef9c7e3caa",
+              "targetWeight": 0,
+              "targetReps": 5
+            }
+          ]
+        }
+      ],
+      "exerciseIds": [
+        "ex-4",
+        "9de07dcd-6304-4010-9f93-e4cd8d2c533c"
+      ],
+      "notificationId": "cfc9343e-2fef-4d6d-810a-f36bc269a3d8",
+      "completed": true,
+      "updatedAt": "2026-09-10T01:32:12.311Z"
+    }
+  ],
+  "templates": [],
+  "unit": "lbs"
+}
