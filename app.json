@@ -24,9 +24,6 @@
     "plugins": [
       "expo-router"
     ],
-    "web": {
-      "output": "single"
-    },
     "experiments": {
       "typedRoutes": true
     }

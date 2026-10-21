@@ -4,9 +4,7 @@ import React, {
   useContext,
   useEffect,
   useReducer,
-  useRef,
 } from 'react';
-import { Platform } from 'react-native';
 import {
   Exercise,
   BodyweightEntry,
@@ -26,7 +24,6 @@ interface AppState {
   scheduledWorkouts: ScheduledWorkout[];
   templates: WorkoutTemplate[];
   unit: WeightUnit;
-  unitUpdatedAt?: string;
   loaded: boolean;
 }
 
@@ -43,7 +40,6 @@ const initialState: AppState = {
 // ─── Actions ──────────────────────────────────────────────────────────────────
 type Action =
   | { type: 'HYDRATE'; payload: Partial<AppState> }
-  | { type: 'REPLACE_STATE'; payload: Partial<AppState> }
   | { type: 'ADD_EXERCISE'; payload: Exercise }
   | { type: 'DELETE_EXERCISE'; payload: string }
   | { type: 'SAVE_WORKOUT'; payload: Workout }
@@ -63,20 +59,6 @@ function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     case 'HYDRATE':
       return { ...state, ...action.payload, loaded: true };
-
-    // Adopt a merged state coming back from the sync server
-    case 'REPLACE_STATE':
-      return {
-        ...state,
-        exercises: action.payload.exercises ?? state.exercises,
-        workouts: action.payload.workouts ?? state.workouts,
-        bodyweights: action.payload.bodyweights ?? state.bodyweights,
-        scheduledWorkouts: action.payload.scheduledWorkouts ?? state.scheduledWorkouts,
-        templates: action.payload.templates ?? state.templates,
-        unit: action.payload.unit ?? state.unit,
-        unitUpdatedAt: action.payload.unitUpdatedAt ?? state.unitUpdatedAt,
-        loaded: true,
-      };
 
     case 'ADD_EXERCISE':
       return { ...state, exercises: [...state.exercises, action.payload] };
@@ -154,7 +136,7 @@ function reducer(state: AppState, action: Action): AppState {
       return {
         ...state,
         scheduledWorkouts: state.scheduledWorkouts.map((sw) =>
-          sw.id === action.payload ? { ...sw, completed: true, updatedAt: new Date().toISOString() } : sw
+          sw.id === action.payload ? { ...sw, completed: true } : sw
         ),
       };
 
@@ -171,11 +153,7 @@ function reducer(state: AppState, action: Action): AppState {
       };
 
     case 'SET_UNIT':
-      return {
-        ...state,
-        unit: action.payload,
-        unitUpdatedAt: new Date().toISOString(),
-      };
+      return { ...state, unit: action.payload };
 
     default:
       return state;
@@ -198,7 +176,6 @@ interface AppContextValue extends AppState {
   addTemplate: (t: WorkoutTemplate) => void;
   deleteTemplate: (id: string) => void;
   setUnit: (u: WeightUnit) => void;
-  replaceAll: (payload: Partial<AppState>) => void;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -206,32 +183,8 @@ const AppContext = createContext<AppContextValue | null>(null);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // ── Hydrate: local sync server on web, AsyncStorage on device ─────────────
+  // ── Hydrate from AsyncStorage ─────────────────────────────────────────────
   useEffect(() => {
-    if (Platform.OS === 'web') {
-      (async () => {
-        try {
-          const res = await fetch('/api/state');
-          const raw = await res.json();
-          dispatch({
-            type: 'HYDRATE',
-            payload: {
-              exercises: Array.isArray(raw.exercises) ? raw.exercises : DEFAULT_EXERCISES,
-              workouts: Array.isArray(raw.workouts) ? raw.workouts : [],
-              bodyweights: Array.isArray(raw.bodyweights) ? raw.bodyweights : [],
-              scheduledWorkouts: Array.isArray(raw.scheduledWorkouts) ? raw.scheduledWorkouts : [],
-              templates: Array.isArray(raw.templates) ? raw.templates : [],
-              unit: raw.unit === 'kg' ? 'kg' : 'lbs',
-              unitUpdatedAt: raw.unitUpdatedAt,
-            },
-          });
-        } catch {
-          // Server unreachable — still render with defaults
-          dispatch({ type: 'HYDRATE', payload: {} });
-        }
-      })();
-      return;
-    }
     (async () => {
       const [exercises, workouts, bodyweights, scheduledWorkouts, templates, unit] = await Promise.all([
         load<Exercise[]>(KEYS.EXERCISES, DEFAULT_EXERCISES),
@@ -248,76 +201,40 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     })();
   }, []);
 
-  // ── Persist on state change (AsyncStorage on device; server push on web) ──
+  // ── Persist on state change (AsyncStorage) ────────────────────────────────
   useEffect(() => {
-    if (!state.loaded || Platform.OS === 'web') return;
+    if (!state.loaded) return;
     save(KEYS.EXERCISES, state.exercises);
   }, [state.exercises, state.loaded]);
 
   useEffect(() => {
-    if (!state.loaded || Platform.OS === 'web') return;
+    if (!state.loaded) return;
     save(KEYS.WORKOUTS, state.workouts);
   }, [state.workouts, state.loaded]);
 
   useEffect(() => {
-    if (!state.loaded || Platform.OS === 'web') return;
+    if (!state.loaded) return;
     save(KEYS.BODYWEIGHTS, state.bodyweights);
   }, [state.bodyweights, state.loaded]);
 
   useEffect(() => {
-    if (!state.loaded || Platform.OS === 'web') return;
+    if (!state.loaded) return;
     save(KEYS.SCHEDULED_WORKOUTS, state.scheduledWorkouts);
   }, [state.scheduledWorkouts, state.loaded]);
 
   useEffect(() => {
-    if (!state.loaded || Platform.OS === 'web') return;
+    if (!state.loaded) return;
     save(KEYS.WORKOUT_TEMPLATES, state.templates);
   }, [state.templates, state.loaded]);
 
   useEffect(() => {
-    if (!state.loaded || Platform.OS === 'web') return;
+    if (!state.loaded) return;
     save(KEYS.UNIT, state.unit);
   }, [state.unit, state.loaded]);
 
-  // ── Web: push full state to the desktop sync server (debounced) ───────────
-  const lastPushedRef = useRef('');
-  const stateJson = JSON.stringify({
-    exercises: state.exercises,
-    workouts: state.workouts,
-    bodyweights: state.bodyweights,
-    scheduledWorkouts: state.scheduledWorkouts,
-    templates: state.templates,
-    unit: state.unit,
-    unitUpdatedAt: state.unitUpdatedAt,
-  });
-  useEffect(() => {
-    if (Platform.OS !== 'web' || !state.loaded) return;
-    if (stateJson === lastPushedRef.current) return;
-    const id = setTimeout(async () => {
-      try {
-        const res = await fetch('/api/state', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: stateJson,
-        });
-        if (!res.ok) return;
-        lastPushedRef.current = stateJson;
-        const merged = await res.json();
-        // Adopt merged records that only existed on the server; a no-op
-        // whenever the server had nothing new, so this converges.
-        dispatch({ type: 'REPLACE_STATE', payload: merged });
-      } catch {
-        // Server unreachable — keep working locally, retried on next change
-      }
-    }, 1200);
-    return () => clearTimeout(id);
-  }, [stateJson, state.loaded]);
-
   // ── Actions ──────────────────────────────────────────────────────────────
-  // Records carry an updatedAt stamp so the sync merge can resolve conflicts
-  const now = () => new Date().toISOString();
   const addExercise = useCallback(
-    (e: Exercise) => dispatch({ type: 'ADD_EXERCISE', payload: { ...e, updatedAt: now() } }),
+    (e: Exercise) => dispatch({ type: 'ADD_EXERCISE', payload: e }),
     []
   );
   const deleteExercise = useCallback(
@@ -325,11 +242,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     []
   );
   const saveWorkout = useCallback(
-    (w: Workout) => dispatch({ type: 'SAVE_WORKOUT', payload: { ...w, updatedAt: now() } }),
+    (w: Workout) => dispatch({ type: 'SAVE_WORKOUT', payload: w }),
     []
   );
   const updateWorkout = useCallback(
-    (w: Workout) => dispatch({ type: 'UPDATE_WORKOUT', payload: { ...w, updatedAt: now() } }),
+    (w: Workout) => dispatch({ type: 'UPDATE_WORKOUT', payload: w }),
     []
   );
   const deleteWorkout = useCallback(
@@ -338,7 +255,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   );
   const upsertBodyweight = useCallback(
     (entry: BodyweightEntry) =>
-      dispatch({ type: 'UPSERT_BODYWEIGHT', payload: { ...entry, updatedAt: now() } }),
+      dispatch({ type: 'UPSERT_BODYWEIGHT', payload: entry }),
     []
   );
   const deleteBodyweight = useCallback(
@@ -347,12 +264,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   );
   const scheduleWorkout = useCallback(
     (sw: ScheduledWorkout) =>
-      dispatch({ type: 'SCHEDULE_WORKOUT', payload: { ...sw, updatedAt: now() } }),
+      dispatch({ type: 'SCHEDULE_WORKOUT', payload: sw }),
     []
   );
   const updateScheduledWorkout = useCallback(
     (sw: ScheduledWorkout) =>
-      dispatch({ type: 'UPDATE_SCHEDULED_WORKOUT', payload: { ...sw, updatedAt: now() } }),
+      dispatch({ type: 'UPDATE_SCHEDULED_WORKOUT', payload: sw }),
     []
   );
   const deleteScheduledWorkout = useCallback(
@@ -367,7 +284,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   );
   const addTemplate = useCallback(
     (t: WorkoutTemplate) =>
-      dispatch({ type: 'ADD_TEMPLATE', payload: { ...t, updatedAt: now() } }),
+      dispatch({ type: 'ADD_TEMPLATE', payload: t }),
     []
   );
   const deleteTemplate = useCallback(
@@ -379,11 +296,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     (u: WeightUnit) => dispatch({ type: 'SET_UNIT', payload: u }),
     []
   );
-  const replaceAll = useCallback(
-    (payload: Partial<AppState>) => dispatch({ type: 'REPLACE_STATE', payload }),
-    []
-  );
-
   return (
     <AppContext.Provider
       value={{
@@ -402,7 +314,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         addTemplate,
         deleteTemplate,
         setUnit,
-        replaceAll,
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Dumbbell, History, ListChecks, MonitorSmartphone } from 'lucide-react-native';
+import { Dumbbell, History, ListChecks } from 'lucide-react-native';
 import C from '../../constants/colors';
 import { StyleSheet } from 'react-native';
 
@@ -54,15 +54,6 @@ export default function TabsLayout() {
           title: 'Exercises',
           tabBarIcon: ({ color, size }) => (
             <ListChecks size={size} color={color} strokeWidth={2} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="sync"
-        options={{
-          title: 'Sync',
-          tabBarIcon: ({ color, size }) => (
-            <MonitorSmartphone size={size} color={color} strokeWidth={2} />
           ),
         }}
       />

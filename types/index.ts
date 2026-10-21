@@ -5,7 +5,6 @@ export interface Exercise {
   name: string;
   muscleGroup: string;
   isCustom?: boolean;
-  updatedAt?: string;
 }
 
 export interface WorkoutSet {
@@ -27,14 +26,12 @@ export interface Workout {
   durationMs: number;
   exercises: WorkoutExercise[];
   notes?: string;
-  updatedAt?: string;
 }
 
 export interface BodyweightEntry {
   id: string;
   date: string;   // "YYYY-MM-DD"
   weight: number;
-  updatedAt?: string;
 }
 
 export interface TargetSet {
@@ -54,7 +51,6 @@ export interface WorkoutTemplate {
   id: string;
   name: string;
   plannedExercises: PlannedExercise[];
-  updatedAt?: string;
 }
 
 export interface ScheduledWorkout {
@@ -68,7 +64,6 @@ export interface ScheduledWorkout {
   notificationId?: string;          // expo-notifications ID
   completed?: boolean;
   notes?: string;
-  updatedAt?: string;
 }
 
 export type WeightUnit = 'lbs' | 'kg';
