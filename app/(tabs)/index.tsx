@@ -9,6 +9,7 @@ import {
   TextInput,
   Alert,
   Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -100,6 +101,9 @@ function ExercisePicker({
 
   return (
     <Modal visible={visible} animationType="slide" transparent statusBarTranslucent onRequestClose={onClose}>
+      {/* Full-screen KeyboardAvoidingView container (see AddExerciseModal):
+          keeps the search input above the keyboard. */}
+      <KeyboardAvoidingView behavior="padding" style={pickerStyles.container}>
       <Pressable style={pickerStyles.overlay} onPress={onClose} />
       <View style={[pickerStyles.sheet, { paddingBottom: Math.max(insets.bottom, 16) }]}>
         <View style={pickerStyles.handle} />
@@ -167,15 +171,15 @@ function ExercisePicker({
           />
         </View>
       </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
 
 const pickerStyles = StyleSheet.create({
+  container: { flex: 1, justifyContent: 'flex-end' },
   overlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: C.overlay },
   sheet: {
-    position: 'absolute',
-    bottom: 0, left: 0, right: 0,
     backgroundColor: C.bgCard,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,

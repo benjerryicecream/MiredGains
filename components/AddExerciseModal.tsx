@@ -7,7 +7,6 @@ import {
   Pressable,
   ScrollView,
   KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
 import { X } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -73,11 +72,17 @@ export default function AddExerciseModal({
       statusBarTranslucent
       onRequestClose={handleClose}
     >
-      <Pressable style={styles.overlay} onPress={handleClose} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 24) }]}
-      >
+      {/* The KeyboardAvoidingView must be the full-screen container, not the
+          sheet itself: it measures how much of its own frame the keyboard
+          overlaps and pads the sheet up by exactly that amount. When it *was*
+          the sheet (absolute, bottom-anchored, shrink-wrapped), there was no
+          frame to measure against, so on Android the keyboard just covered
+          the name input. behavior="padding" is safe on Android too — if the
+          window already resized (adjustResize), the overlap computes to 0
+          and no extra padding is added. */}
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+        <Pressable style={styles.overlay} onPress={handleClose} />
+        <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 24) }]}>
         {/* Handle */}
         <View style={styles.handle} />
 
@@ -129,6 +134,7 @@ export default function AddExerciseModal({
             style={styles.saveBtn}
           />
         </ScrollView>
+        </View>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -143,11 +149,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: C.overlay,
   },
+  container: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
   sheet: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     backgroundColor: C.bgCard,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,

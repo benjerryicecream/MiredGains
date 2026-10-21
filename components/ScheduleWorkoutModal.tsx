@@ -9,7 +9,6 @@ import {
   TextInput,
   Alert,
   KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
 import {
   X,
@@ -281,11 +280,13 @@ export default function ScheduleWorkoutModal({
       statusBarTranslucent
       onRequestClose={handleClose}
     >
-      <Pressable style={styles.overlay} onPress={handleClose} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 20) }]}
-      >
+      {/* Same fix as AddExerciseModal: the KeyboardAvoidingView is the
+          full-screen container and the sheet is its child, so the keyboard
+          overlap is measured against the screen and the sheet is padded
+          above the keyboard instead of being covered by it. */}
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+        <Pressable style={styles.overlay} onPress={handleClose} />
+        <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 20) }]}>
         {/* Handle */}
         <View style={styles.handle} />
 
@@ -518,6 +519,7 @@ export default function ScheduleWorkoutModal({
             style={styles.submitBtn}
           />
         </ScrollView>
+        </View>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -532,11 +534,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: C.overlay,
   },
+  container: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
   sheet: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     backgroundColor: C.bgCard,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
