@@ -10,13 +10,12 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Scale, Plus, History as HistoryIcon, TrendingUp } from 'lucide-react-native';
+import { Scale, Plus, History as HistoryIcon } from 'lucide-react-native';
 import C from '../../constants/colors';
 import { useApp } from '../../context/AppContext';
 import WorkoutSummaryCard from '../../components/WorkoutSummaryCard';
 import BodyweightEntryRow from '../../components/BodyweightEntryRow';
 import EditWorkoutModal from '../../components/EditWorkoutModal';
-import ProgressChartModal from '../../components/ProgressChartModal';
 import { BodyweightEntry, Workout } from '../../types';
 import 'react-native-get-random-values';
 import { v4 as uuid } from 'uuid';
@@ -39,8 +38,6 @@ export default function HistoryScreen() {
   const [bwInput, setBwInput] = useState('');
   const [tab, setTab] = useState<'workouts' | 'bodyweight'>('workouts');
   const [editingWorkout, setEditingWorkout] = useState<Workout | null>(null);
-  const [chartModalVisible, setChartModalVisible] = useState(false);
-  const [chartModalTab, setChartModalTab] = useState<'bodyweight' | 'exercise'>('bodyweight');
 
   const sortedWorkouts = useMemo(
     () => [...workouts].sort((a, b) => b.date.localeCompare(a.date)),
@@ -70,17 +67,6 @@ export default function HistoryScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>History</Text>
-        <Pressable
-          style={styles.headerChartBtn}
-          onPress={() => {
-            setChartModalTab(tab === 'bodyweight' ? 'bodyweight' : 'exercise');
-            setChartModalVisible(true);
-          }}
-          android_ripple={{ color: C.ripple }}
-        >
-          <TrendingUp size={20} color={C.textSecondary} strokeWidth={2.5} />
-          <Text style={styles.headerChartBtnText}>Charts</Text>
-        </Pressable>
       </View>
 
       {/* Tab switcher */}
@@ -112,26 +98,6 @@ export default function HistoryScreen() {
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
         >
-          {sortedWorkouts.length > 0 && (
-            <Pressable
-              style={styles.chartBanner}
-              onPress={() => {
-                setChartModalTab('exercise');
-                setChartModalVisible(true);
-              }}
-              android_ripple={{ color: C.ripple }}
-            >
-              <View style={styles.chartBannerLeft}>
-                <TrendingUp size={20} color={C.textSecondary} strokeWidth={2.5} />
-                <View>
-                  <Text style={styles.chartBannerTitle}>Exercise Progress Charts</Text>
-                  <Text style={styles.chartBannerSub}>Track weight and volume over time</Text>
-                </View>
-              </View>
-              <Text style={styles.chartBannerAction}>View</Text>
-            </Pressable>
-          )}
-
           {sortedWorkouts.length === 0 ? (
             <View style={styles.empty}>
               <HistoryIcon size={36} color={C.textMuted} strokeWidth={1.5} />
@@ -163,25 +129,6 @@ export default function HistoryScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Chart Banner Card */}
-          <Pressable
-            style={styles.chartBanner}
-            onPress={() => {
-              setChartModalTab('bodyweight');
-              setChartModalVisible(true);
-            }}
-            android_ripple={{ color: C.ripple }}
-          >
-            <View style={styles.chartBannerLeft}>
-              <Scale size={20} color={C.textSecondary} strokeWidth={2.5} />
-              <View>
-                <Text style={styles.chartBannerTitle}>Body Weight Trend Chart</Text>
-                <Text style={styles.chartBannerSub}>Plot weight changes and target goals</Text>
-              </View>
-            </View>
-            <Text style={styles.chartBannerAction}>View</Text>
-          </Pressable>
-
           {/* Log today's weight */}
           <View style={styles.bwLogCard}>
             <Text style={styles.bwLogTitle}>Log Today's Weight</Text>
@@ -234,12 +181,6 @@ export default function HistoryScreen() {
         workout={editingWorkout}
         onClose={() => setEditingWorkout(null)}
       />
-
-      <ProgressChartModal
-        visible={chartModalVisible}
-        onClose={() => setChartModalVisible(false)}
-        initialTab={chartModalTab}
-      />
     </SafeAreaView>
   );
 }
@@ -258,20 +199,6 @@ const styles = StyleSheet.create({
     borderColor: C.borderSubtle,
   },
   headerTitle: { fontSize: 22, fontWeight: '700', color: C.textPrimary },
-  headerChartBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 100,
-    backgroundColor: C.bgElevated,
-  },
-  headerChartBtnText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: C.textSecondary,
-  },
 
   tabBar: {
     flexDirection: 'row',
@@ -294,39 +221,6 @@ const styles = StyleSheet.create({
   tabLabelActive: { color: C.emerald },
 
   list: { padding: 16, paddingBottom: 48 },
-
-  chartBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: C.bgCard,
-    borderWidth: 1,
-    borderColor: C.borderSubtle,
-    borderRadius: 16,
-    padding: 14,
-    marginBottom: 16,
-  },
-  chartBannerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    flex: 1,
-  },
-  chartBannerTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: C.textPrimary,
-  },
-  chartBannerSub: {
-    fontSize: 12,
-    color: C.textMuted,
-  },
-  chartBannerAction: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: C.textSecondary,
-    marginLeft: 8,
-  },
 
   // Empty state
   empty: {

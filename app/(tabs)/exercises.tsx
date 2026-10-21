@@ -9,11 +9,10 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Plus, Trash2, Tag, TrendingUp } from 'lucide-react-native';
+import { Plus, Trash2, Tag } from 'lucide-react-native';
 import C from '../../constants/colors';
 import { useApp } from '../../context/AppContext';
 import AddExerciseModal from '../../components/AddExerciseModal';
-import ProgressChartModal from '../../components/ProgressChartModal';
 import { Exercise } from '../../types';
 
 const MUSCLE_GROUP_COLORS: Record<string, string> = {
@@ -53,9 +52,6 @@ export default function ExercisesScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 
-  const [chartModalVisible, setChartModalVisible] = useState(false);
-  const [selectedChartExId, setSelectedChartExId] = useState<string | undefined>(undefined);
-
   const muscleGroups = useMemo(
     () => Array.from(new Set(exercises.map((e) => e.muscleGroup))).sort(),
     [exercises]
@@ -87,24 +83,12 @@ export default function ExercisesScreen() {
     setModalVisible(false);
   };
 
-  const handleOpenChart = (exId?: string) => {
-    setSelectedChartExId(exId);
-    setChartModalVisible(true);
-  };
-
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.safe}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Exercises</Text>
         <View style={styles.headerActions}>
-          <Pressable
-            style={styles.headerChartBtn}
-            onPress={() => handleOpenChart()}
-            android_ripple={{ color: C.ripple }}
-          >
-            <TrendingUp size={18} color={C.textSecondary} strokeWidth={2.5} />
-          </Pressable>
           <Pressable
             style={styles.addBtn}
             onPress={() => setModalVisible(true)}
@@ -162,13 +146,6 @@ export default function ExercisesScreen() {
                 </View>
               )}
               <Pressable
-                onPress={() => handleOpenChart(ex.id)}
-                android_ripple={{ color: C.ripple, radius: 18, borderless: true }}
-                style={styles.actionIconBtn}
-              >
-                <TrendingUp size={16} color={C.textSecondary} />
-              </Pressable>
-              <Pressable
                 onPress={() => handleDelete(ex)}
                 android_ripple={{ color: 'rgba(239,68,68,0.15)', radius: 18, borderless: true }}
                 style={styles.actionIconBtn}
@@ -185,13 +162,6 @@ export default function ExercisesScreen() {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         onSave={handleSave}
-      />
-
-      <ProgressChartModal
-        visible={chartModalVisible}
-        onClose={() => setChartModalVisible(false)}
-        initialTab="exercise"
-        initialExerciseId={selectedChartExId}
       />
     </SafeAreaView>
   );
@@ -215,14 +185,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-  },
-  headerChartBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: C.bgElevated,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   addBtn: {
     width: 40,
